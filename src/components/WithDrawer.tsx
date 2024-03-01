@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDrawerOpenStore } from "@/store";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
@@ -23,6 +23,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import QuestionMarkOutlinedIcon from "@mui/icons-material/QuestionMarkOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { colors } from "@/config";
 
 const drawerWidth = 240;
 
@@ -33,6 +34,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
+  backgroundColor: colors.main,
+  color: colors.text_over_main,
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -45,6 +48,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
+  backgroundColor: colors.main,
+  color: colors.text_over_main,
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -110,7 +115,7 @@ const drawerLastItems = [
   },
 ];
 
-export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
+export const WithDrawer = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { drawerOpen, setDrawerOpen } = useDrawerOpenStore();
 
@@ -119,12 +124,12 @@ export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
       setDrawerOpen(false);
       setTimeout(() => {
         router.push("/practices");
-      }, 300);
+      }, 200);
     } else {
       setDrawerOpen(true);
       setTimeout(() => {
         router.push("/");
-      }, 300);
+      }, 200);
     }
   };
 
@@ -146,7 +151,7 @@ export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
                   minWidth: 0,
                   mr: drawerOpen ? 3 : "auto",
                   justifyContent: "center",
-                  color: "white",
+                  color: colors.text_over_main,
                 }}
               >
                 {icon}
@@ -163,7 +168,7 @@ export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <CssBaseline />
       <Drawer variant="permanent" open={drawerOpen}>
         <Box sx={{ height: 30 }} />
@@ -172,8 +177,8 @@ export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
         {renderList(drawerLastItems)}
         <Box sx={{ height: 30 }} />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {children}
+      <Box sx={{ flex: 1, display: "flex" }}>
+        {!drawerOpen ? children : null}
       </Box>
     </Box>
   );

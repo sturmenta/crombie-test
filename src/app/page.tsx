@@ -2,15 +2,15 @@
 
 import { ThemeProvider } from "@mui/material/styles";
 
-import { C_Drawer } from "@/components";
+import { WithDrawer } from "@/components";
 import { theme } from "@/config";
 
 export default function Home() {
   return (
     <ThemeProvider theme={theme}>
-      <C_Drawer>
+      <WithDrawer>
         <></>
-      </C_Drawer>
+      </WithDrawer>
     </ThemeProvider>
   );
 }
