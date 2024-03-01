@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { useDrawerOpenStore } from "@/store";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -74,7 +76,6 @@ const drawerItems = [
   {
     text: "PRACTICES",
     icon: <PlaceOutlinedIcon />,
-    onOpen: () => console.log("PRACTICES"),
   },
   {
     text: "JOBS",
@@ -109,41 +110,51 @@ const drawerLastItems = [
   },
 ];
 
-export const C_Drawer = () => {
-  const [open, setOpen] = React.useState(true);
+export const C_Drawer = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
+  const { drawerOpen, setDrawerOpen } = useDrawerOpenStore();
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const onDrawerItemClick = (text: string) => {
+    if (text === "PRACTICES") {
+      setDrawerOpen(false);
+      setTimeout(() => {
+        router.push("/practices");
+      }, 300);
+    } else {
+      setDrawerOpen(true);
+      setTimeout(() => {
+        router.push("/");
+      }, 300);
+    }
   };
 
   const renderList = (items: typeof drawerItems) => {
     return (
       <List>
-        {items.map(({ icon, onOpen = () => {}, text }, index) => (
+        {items.map(({ icon, text }, index) => (
           <ListItem key={text} disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: open ? "initial" : "center",
+                justifyContent: drawerOpen ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={onOpen}
+              onClick={() => onDrawerItemClick(text)}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
+                  mr: drawerOpen ? 3 : "auto",
                   justifyContent: "center",
+                  color: "white",
                 }}
-                style={{ color: "white" }}
               >
                 {icon}
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText
+                primary={text}
+                sx={{ opacity: drawerOpen ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -154,13 +165,15 @@ export const C_Drawer = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={drawerOpen}>
+        <Box sx={{ height: 30 }} />
         {renderList(drawerItems)}
         <Box sx={{ flexGrow: 1 }} />
         {renderList(drawerLastItems)}
+        <Box sx={{ height: 30 }} />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <p>page</p>
+        {children}
       </Box>
     </Box>
   );
