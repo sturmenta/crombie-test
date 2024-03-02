@@ -15,7 +15,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
-  Box,
   Checkbox,
   FormControlLabel,
   IconButton,
@@ -26,6 +25,7 @@ import {
 import { WithDrawer } from "@/components";
 import { colors, theme } from "@/config";
 import { useDrawerOpenStore } from "@/store";
+import { MOCKED_PRACTICES } from "@/mocked";
 
 export default function Practices() {
   const router = useRouter();
@@ -42,42 +42,22 @@ export default function Practices() {
     <ThemeProvider theme={theme}>
       <WithDrawer>
         {drawerOpen ? null : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-            }}
-          >
+          <div className="flex flex-1 flex-col">
             <CloseHeader onClose={onClose} />
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                overflowY: "scroll",
-              }}
-            >
-              <Box
-                sx={{
-                  p: 3,
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  maxWidth: 600,
-                }}
-              >
+            <div className="flex flex-1 justify-center overflow-y-scroll">
+              <div className="p-5 flex flex-1 flex-col max-w-xl">
                 <SelectInput
                   displayBy={displayBy}
                   setDisplayBy={setDisplayBy}
                 />
-                <Box sx={{ mt: 2 }} />
+                <div className="h-3" />
                 <SearchInput />
-                <Box sx={{ mt: 2 }} />
-                <ListOfItems />
-              </Box>
-            </Box>
-          </Box>
+                <div className="h-3" />
+                <ListOfItems items={MOCKED_PRACTICES} />
+                <div className="h-5" />
+              </div>
+            </div>
+          </div>
         )}
       </WithDrawer>
     </ThemeProvider>
@@ -108,20 +88,16 @@ const ListItem = ({
 );
 
 const CloseHeader = ({ onClose }: { onClose: () => void }) => (
-  <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-    <Box
-      sx={{
-        backgroundColor: colors.secondary,
-        borderTopLeftRadius: 100,
-        borderBottomLeftRadius: 100,
-        pl: 0.5,
-      }}
+  <div className="flex justify-end mt-5">
+    <div
+      className="rounded-tl-full rounded-bl-full pl-1"
+      style={{ backgroundColor: colors.secondary }}
     >
       <IconButton aria-label="delete" size="small" onClick={onClose}>
         <CloseIcon sx={{ fontSize: 25, color: colors.text_over_secondary }} />
       </IconButton>
-    </Box>
-  </Box>
+    </div>
+  </div>
 );
 
 const SelectInput = ({
@@ -145,11 +121,11 @@ const SelectInput = ({
     >
       {[{ value: "practice", label: "Practice" }].map(({ value, label }) => (
         <MenuItem value={value} key={value}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <div className="flex items-center">
             <PlaceOutlinedIcon sx={{ fontSize: 18, color: colors.secondary }} />
             <div style={{ width: "10px" }} />
             <p>{label}</p>
-          </Box>
+          </div>
         </MenuItem>
       ))}
     </Select>
@@ -157,7 +133,7 @@ const SelectInput = ({
 );
 
 const SearchInput = () => (
-  <Box sx={{ display: "flex", alignItems: "center" }}>
+  <div className="flex items-center">
     <FormControl sx={{ width: "100%" }}>
       <TextField
         id="search"
@@ -175,41 +151,41 @@ const SearchInput = () => (
     <IconButton aria-label="delete" size="small" sx={{ marginLeft: 1 }}>
       <FilterListIcon sx={{ fontSize: 25, color: colors.secondary }} />
     </IconButton>
-  </Box>
+  </div>
 );
 
-const ListOfItems = () => {
+const ListOfItems = ({
+  items,
+}: {
+  items: { name: string; practice: string; amount_of_jobs: number }[];
+}) => {
   return (
-    <Box
-      sx={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "scroll",
-      }}
-    >
-      <Box sx={{ display: "flex" }}>
-        <Box sx={{ flex: 1, display: "flex" }}>
+    <div className="flex flex-1 flex-col overflow-y-scroll">
+      <div className="flex">
+        <div className="flex flex-1">
           <ListItem label={<b>All</b>} labelColor={colors.secondary} />
-        </Box>
-        <b style={{ color: colors.secondary }}>Jobs</b>
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "scroll",
-        }}
-      >
-        {Array(100)
-          .fill(0)
-          .map((_, index) => (
-            <Box key={index} sx={{ mb: 0 }}>
-              <ListItem label="Label" />
-            </Box>
-          ))}
-      </Box>
-    </Box>
+        </div>
+        <b className="w-12 mx-3" style={{ color: colors.secondary }}>
+          Jobs
+        </b>
+      </div>
+      <div className="flex flex-1 flex-col overflow-y-scroll">
+        {items.map(({ amount_of_jobs, name, practice }, index) => (
+          <div key={index} className="flex mt-2">
+            <div className="flex flex-1">
+              <ListItem label={`${name} - ${practice}`} />
+            </div>
+            <div className="px-2 flex items-center">
+              <p
+                className="w-12 text-center"
+                style={{ color: colors.secondary }}
+              >
+                ({amount_of_jobs > 99 ? "99+" : amount_of_jobs})
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };

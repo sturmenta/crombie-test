@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDrawerOpenStore } from "@/store";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -72,46 +70,54 @@ const Drawer = styled(MuiDrawer, {
 const drawerItems = [
   {
     text: "DASHBOARD",
-    icon: <DashboardOutlinedIcon />,
+    icon: (size: number) => <DashboardOutlinedIcon sx={{ fontSize: size }} />,
   },
   {
     text: "PROVIDERS",
-    icon: <BadgeOutlinedIcon />,
+    icon: (size: number) => <BadgeOutlinedIcon sx={{ fontSize: size }} />,
   },
   {
     text: "PRACTICES",
-    icon: <PlaceOutlinedIcon />,
+    icon: (size: number) => <PlaceOutlinedIcon sx={{ fontSize: size }} />,
   },
   {
     text: "JOBS",
-    icon: <WorkOutlineOutlinedIcon />,
+    icon: (size: number) => <WorkOutlineOutlinedIcon sx={{ fontSize: size }} />,
   },
   {
     text: "SCHEDULES",
-    icon: <CalendarTodayOutlinedIcon />,
+    icon: (size: number) => (
+      <CalendarTodayOutlinedIcon sx={{ fontSize: size }} />
+    ),
   },
   {
     text: "TIME & INVOICES",
-    icon: <MoreTimeOutlinedIcon />,
+    icon: (size: number) => <MoreTimeOutlinedIcon sx={{ fontSize: size }} />,
   },
   {
     text: "TIME & PAY",
-    icon: <MonetizationOnOutlinedIcon />,
+    icon: (size: number) => (
+      <MonetizationOnOutlinedIcon sx={{ fontSize: size }} />
+    ),
   },
   {
     text: "MESSAGES",
-    icon: <ChatBubbleOutlineOutlinedIcon />,
+    icon: (size: number) => (
+      <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: size }} />
+    ),
   },
 ];
 
 const drawerLastItems = [
   {
     text: "HELP",
-    icon: <QuestionMarkOutlinedIcon />,
+    icon: (size: number) => (
+      <QuestionMarkOutlinedIcon sx={{ fontSize: size }} />
+    ),
   },
   {
     text: "SETTINGS",
-    icon: <SettingsOutlinedIcon />,
+    icon: (size: number) => <SettingsOutlinedIcon sx={{ fontSize: size }} />,
   },
 ];
 
@@ -149,12 +155,12 @@ export const WithDrawer = ({ children }: { children: React.ReactNode }) => {
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: drawerOpen ? 3 : "auto",
+                  mr: drawerOpen ? 2 : "auto",
                   justifyContent: "center",
                   color: colors.text_over_main,
                 }}
               >
-                {icon}
+                {icon(18)}
               </ListItemIcon>
               <ListItemText
                 primary={text}
@@ -168,18 +174,16 @@ export const WithDrawer = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <div className="flex h-screen">
       <CssBaseline />
       <Drawer variant="permanent" open={drawerOpen}>
-        <Box sx={{ height: 30 }} />
+        <div className="h-8" />
         {renderList(drawerItems)}
-        <Box sx={{ flexGrow: 1 }} />
+        <div className="flex flex-1" />
         {renderList(drawerLastItems)}
-        <Box sx={{ height: 30 }} />
+        <div className="h-8" />
       </Drawer>
-      <Box sx={{ flex: 1, display: "flex" }}>
-        {!drawerOpen ? children : null}
-      </Box>
-    </Box>
+      <div className="flex flex-1">{!drawerOpen ? children : null}</div>
+    </div>
   );
 };
