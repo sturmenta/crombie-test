@@ -32,6 +32,7 @@ export default function Practices() {
   const { drawerOpen, setDrawerOpen } = useDrawerOpenStore();
 
   const [displayBy, setDisplayBy] = useState("practice");
+  const [filterByText, setFilterByText] = useState("");
 
   const onClose = () => {
     setDrawerOpen(true);
@@ -51,9 +52,12 @@ export default function Practices() {
                   setDisplayBy={setDisplayBy}
                 />
                 <div className="h-3" />
-                <SearchInput />
+                <SearchInput value={filterByText} onChange={setFilterByText} />
                 <div className="h-3" />
-                <ListOfItems items={MOCKED_PRACTICES} />
+                <ListOfItems
+                  items={MOCKED_PRACTICES}
+                  filterByText={filterByText}
+                />
                 <div className="h-5" />
               </div>
             </div>
@@ -66,22 +70,34 @@ export default function Practices() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-const C_Checkbox = () => (
+const C_Checkbox = ({
+  checked,
+  onCheckedChange,
+}: {
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+}) => (
   <Checkbox
-    icon={<CheckBoxIcon sx={{ color: colors.secondary }} />}
-    checkedIcon={<CheckBoxOutlineBlankIcon sx={{ color: colors.secondary }} />}
+    icon={<CheckBoxOutlineBlankIcon sx={{ color: colors.secondary }} />}
+    checkedIcon={<CheckBoxIcon sx={{ color: colors.secondary }} />}
+    checked={checked}
+    onChange={(e) => onCheckedChange?.(e.target.checked)}
   />
 );
 
 const ListItem = ({
   label,
   labelColor,
+  checked,
+  onCheckedChange,
 }: {
   label: React.ReactNode;
   labelColor?: string;
+  checked: boolean;
+  onCheckedChange?: (checked: boolean) => void;
 }) => (
   <FormControlLabel
-    control={<C_Checkbox />}
+    control={<C_Checkbox checked={checked} onCheckedChange={onCheckedChange} />}
     label={label}
     sx={{ color: labelColor }}
   />
@@ -132,13 +148,21 @@ const SelectInput = ({
   </FormControl>
 );
 
-const SearchInput = () => (
+const SearchInput = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) => (
   <div className="flex items-center">
     <FormControl sx={{ width: "100%" }}>
       <TextField
         id="search"
         placeholder="Search"
         variant="outlined"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -156,21 +180,39 @@ const SearchInput = () => (
 
 const ListOfItems = ({
   items,
+  filterByText,
 }: {
   items: { name: string; practice: string; amount_of_jobs: number }[];
+  filterByText: string;
 }) => {
+  const [allChecked, setAllChecked] = useState(false);
+
+  console.log(`filterByText`, filterByText);
+  console.log(`allChecked`, allChecked);
+
+  const filteredItems = items.filter(({ name, practice }) =>
+    `${name} ${practice}`.toLowerCase().includes(filterByText.toLowerCase())
+  );
+
+  // TODO: set all items to checked if allChecked is true
+
   return (
     <div className="flex flex-1 flex-col overflow-y-scroll">
       <div className="flex">
         <div className="flex flex-1">
-          <ListItem label={<b>All</b>} labelColor={colors.secondary} />
+          <ListItem
+            label={<b>All</b>}
+            labelColor={colors.secondary}
+            checked={allChecked}
+            onCheckedChange={(_checked) => setAllChecked(_checked)}
+          />
         </div>
         <b className="w-12 mx-3" style={{ color: colors.secondary }}>
           Jobs
         </b>
       </div>
       <div className="flex flex-1 flex-col overflow-y-scroll">
-        {items.map(({ amount_of_jobs, name, practice }, index) => (
+        {filteredItems.map(({ amount_of_jobs, name, practice }, index) => (
           <div key={index} className="flex mt-2">
             <div className="flex flex-1">
               <ListItem label={`${name} - ${practice}`} />
