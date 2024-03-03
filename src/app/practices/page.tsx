@@ -11,13 +11,14 @@ import { useDrawerOpenStore } from "@/store";
 import { MOCKED_PRACTICES } from "@/mocked";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
 
-import { CloseHeader, ListOfItems } from "./_components";
+import { AddNewModal, Header, ListOfItems } from "./_components";
 
 export default function Practices() {
   const router = useRouter();
   const { setDrawerOpen } = useDrawerOpenStore();
   const { sectionSelected, setSectionSelected } = useSectionSelectedStore();
 
+  const [showAddNewModal, setShowAddNewModal] = useState(false);
   const [displayBy, setDisplayBy] = useState("practice");
   const [filterByText, setFilterByText] = useState("");
 
@@ -32,7 +33,10 @@ export default function Practices() {
       <WithDrawer>
         {sectionSelected === "PRACTICES" && (
           <div className="flex flex-1 flex-col">
-            <CloseHeader onClose={onClose} />
+            <Header
+              onClose={onClose}
+              onAddNew={() => setShowAddNewModal(true)}
+            />
             <div className="flex flex-1 justify-center overflow-y-scroll">
               <div className="p-5 flex flex-1 flex-col max-w-xl">
                 <SelectInput
@@ -51,6 +55,10 @@ export default function Practices() {
             </div>
           </div>
         )}
+        <AddNewModal
+          open={showAddNewModal}
+          handleClose={() => setShowAddNewModal(false)}
+        />
       </WithDrawer>
     </ThemeProvider>
   );
