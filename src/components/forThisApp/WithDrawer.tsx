@@ -9,16 +9,27 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Lottie from "react-lottie";
 
 import { useDrawerOpenStore } from "@/store";
 import { colors } from "@/config";
 import { DrawerSection_Type, drawerItems, drawerLastItems } from "@/config";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
+import {
+  Animation_Empty,
+  Animation_Empty_Dimensions,
+} from "@/assets/animations";
+import { useGetDivDimensions } from "@/hooks";
+import { calculateSizeForAsset } from "@/utils";
 
 const drawerWidth = 240;
 
 export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();
+  const {
+    dimensions: animationContainerDimensions,
+    div_ref: animationContainer_ref,
+  } = useGetDivDimensions();
   const { drawerOpen, setDrawerOpen } = useDrawerOpenStore();
   const { sectionSelected, setSectionSelected } = useSectionSelectedStore();
 
@@ -77,6 +88,11 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
     );
   };
 
+  const animationDimensions = calculateSizeForAsset({
+    assetMaxDimensions: Animation_Empty_Dimensions,
+    containerMaxDimensions: animationContainerDimensions,
+  });
+
   return (
     <div className="flex h-screen">
       <CssBaseline />
@@ -90,8 +106,22 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
       {children ? (
         <div className="flex flex-1">{children}</div>
       ) : (
-        <div className="flex flex-1 items-center justify-center">
-          <p className="text-xl font-light">{sectionSelected}</p>
+        <div
+          className="flex flex-1 flex-col items-center justify-center p-3"
+          ref={animationContainer_ref}
+        >
+          <Lottie
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: Animation_Empty,
+            }}
+            width={animationDimensions.width}
+            height={animationDimensions.height}
+          />
+          <p className="text-xl mt-10 font-light text-center">
+            {sectionSelected}
+          </p>
         </div>
       )}
     </div>

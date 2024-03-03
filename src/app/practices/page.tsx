@@ -15,8 +15,8 @@ import { CloseHeader, ListOfItems } from "./_components";
 
 export default function Practices() {
   const router = useRouter();
-  const { drawerOpen, setDrawerOpen } = useDrawerOpenStore();
-  const { setSectionSelected } = useSectionSelectedStore();
+  const { setDrawerOpen } = useDrawerOpenStore();
+  const { sectionSelected, setSectionSelected } = useSectionSelectedStore();
 
   const [displayBy, setDisplayBy] = useState("practice");
   const [filterByText, setFilterByText] = useState("");
@@ -30,7 +30,7 @@ export default function Practices() {
   return (
     <ThemeProvider theme={theme}>
       <WithDrawer>
-        {drawerOpen ? null : (
+        {sectionSelected === "PRACTICES" && (
           <div className="flex flex-1 flex-col">
             <CloseHeader onClose={onClose} />
             <div className="flex flex-1 justify-center overflow-y-scroll">
