@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button } from "@mui/material";
 
 import { colors } from "@/config";
 import { CheckboxItem } from "@/components/generic";
@@ -39,10 +41,16 @@ export const ListOfItems = ({
     [items]
   );
 
+  const onDeleteItems = () => {
+    console.log("deleteItems");
+  };
+
+  const showDeleteButton = atLeastOneChecked; // check all the items checked are from backend
+
   return (
     <div className="flex flex-1 flex-col overflow-y-scroll">
-      <div className="flex">
-        <div className="flex flex-1">
+      <div className="flex items-center">
+        <div className="flex">
           <CheckboxItem
             label={<b>All</b>}
             labelColor={colors.secondary}
@@ -53,9 +61,24 @@ export const ListOfItems = ({
             }}
           />
         </div>
-        <b className="w-12 mx-3" style={{ color: colors.secondary }}>
-          Jobs
-        </b>
+        {showDeleteButton && (
+          <div className="ml-3">
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={onDeleteItems}
+            >
+              Delete
+            </Button>
+          </div>
+        )}
+        <div className="flex flex-1 justify-end">
+          <b className="w-12 mx-3" style={{ color: colors.secondary }}>
+            Jobs
+          </b>
+        </div>
       </div>
       <div className="flex flex-1 flex-col overflow-y-scroll">
         {filteredItemsByText.map(

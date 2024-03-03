@@ -67,7 +67,7 @@ const StyledInputRoot = styled("div")(
   border-radius: 3px;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-  border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[400]};
+  border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[300]};
   display: grid;
   grid-template-columns: 1fr 19px;
   grid-template-rows: 1fr 1fr;
