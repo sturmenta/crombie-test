@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "@mui/material/styles";
 import InputLabel from "@mui/material/InputLabel";
@@ -14,6 +14,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import {
   Checkbox,
   FormControlLabel,
@@ -70,34 +71,42 @@ export default function Practices() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+type CheckboxProps = {
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  checkedIsIndeterminate?: boolean;
+};
+
 const C_Checkbox = ({
   checked,
   onCheckedChange,
-}: {
-  checked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-}) => (
+  checkedIsIndeterminate,
+}: CheckboxProps) => (
   <Checkbox
     icon={<CheckBoxOutlineBlankIcon sx={{ color: colors.secondary }} />}
-    checkedIcon={<CheckBoxIcon sx={{ color: colors.secondary }} />}
-    checked={checked}
+    checkedIcon={
+      checkedIsIndeterminate ? (
+        <IndeterminateCheckBoxIcon sx={{ color: colors.secondary }} />
+      ) : (
+        <CheckBoxIcon sx={{ color: colors.secondary }} />
+      )
+    }
+    checked={!!(checked || checkedIsIndeterminate)} // parse to boolean to avoid "a component is changing an uncontrolled input to be controlled" error
     onChange={(e) => onCheckedChange?.(e.target.checked)}
   />
 );
 
-const ListItem = ({
+const CheckboxItem = ({
   label,
   labelColor,
-  checked,
-  onCheckedChange,
+  checkboxProps,
 }: {
   label: React.ReactNode;
   labelColor?: string;
-  checked: boolean;
-  onCheckedChange?: (checked: boolean) => void;
+  checkboxProps: CheckboxProps;
 }) => (
   <FormControlLabel
-    control={<C_Checkbox checked={checked} onCheckedChange={onCheckedChange} />}
+    control={<C_Checkbox {...checkboxProps} />}
     label={label}
     sx={{ color: labelColor }}
   />
@@ -182,29 +191,50 @@ const ListOfItems = ({
   items,
   filterByText,
 }: {
-  items: { name: string; practice: string; amount_of_jobs: number }[];
+  items: {
+    name: string;
+    practice: string;
+    amount_of_jobs: number;
+    id: number;
+  }[];
   filterByText: string;
 }) => {
-  const [allChecked, setAllChecked] = useState(false);
+  const [itemsChecked, setItemsChecked] = useState<{ [id: number]: boolean }>(
+    items.reduce((acc, { id }) => ({ ...acc, [id]: false }), {})
+  );
 
-  console.log(`filterByText`, filterByText);
-  console.log(`allChecked`, allChecked);
-
-  const filteredItems = items.filter(({ name, practice }) =>
+  const filteredItemsByText = items.filter(({ name, practice }) =>
     `${name} ${practice}`.toLowerCase().includes(filterByText.toLowerCase())
   );
 
-  // TODO: set all items to checked if allChecked is true
+  const atLeastOneChecked = Object.keys(itemsChecked).some(
+    (key) => itemsChecked[key as unknown as number]
+  );
+  const areAllChecked = Object.keys(itemsChecked).every(
+    (key) => itemsChecked[key as unknown as number]
+  );
+
+  const setAllItemsChecked = useCallback(
+    (checked: boolean) => {
+      setItemsChecked(
+        items.reduce((acc, { id }) => ({ ...acc, [id]: checked }), {})
+      );
+    },
+    [items]
+  );
 
   return (
     <div className="flex flex-1 flex-col overflow-y-scroll">
       <div className="flex">
         <div className="flex flex-1">
-          <ListItem
+          <CheckboxItem
             label={<b>All</b>}
             labelColor={colors.secondary}
-            checked={allChecked}
-            onCheckedChange={(_checked) => setAllChecked(_checked)}
+            checkboxProps={{
+              checked: areAllChecked,
+              checkedIsIndeterminate: !areAllChecked && atLeastOneChecked,
+              onCheckedChange: (allChecked) => setAllItemsChecked(allChecked),
+            }}
           />
         </div>
         <b className="w-12 mx-3" style={{ color: colors.secondary }}>
@@ -212,21 +242,33 @@ const ListOfItems = ({
         </b>
       </div>
       <div className="flex flex-1 flex-col overflow-y-scroll">
-        {filteredItems.map(({ amount_of_jobs, name, practice }, index) => (
-          <div key={index} className="flex mt-2">
-            <div className="flex flex-1">
-              <ListItem label={`${name} - ${practice}`} />
+        {filteredItemsByText.map(
+          ({ amount_of_jobs, name, practice, id }, index) => (
+            <div key={index} className="flex mt-2">
+              <div className="flex flex-1">
+                <CheckboxItem
+                  label={`${name} - ${practice}`}
+                  checkboxProps={{
+                    checked: itemsChecked[id],
+                    onCheckedChange: () =>
+                      setItemsChecked({
+                        ...itemsChecked,
+                        [id]: !itemsChecked[id],
+                      }),
+                  }}
+                />
+              </div>
+              <div className="px-2 flex items-center">
+                <p
+                  className="w-12 text-center"
+                  style={{ color: colors.secondary }}
+                >
+                  ({amount_of_jobs > 99 ? "99+" : amount_of_jobs})
+                </p>
+              </div>
             </div>
-            <div className="px-2 flex items-center">
-              <p
-                className="w-12 text-center"
-                style={{ color: colors.secondary }}
-              >
-                ({amount_of_jobs > 99 ? "99+" : amount_of_jobs})
-              </p>
-            </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   );
