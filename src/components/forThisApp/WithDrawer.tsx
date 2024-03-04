@@ -10,6 +10,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Lottie from "react-lottie";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useDrawerOpenStore } from "@/store";
 import { colors } from "@/config";
@@ -35,9 +36,12 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
 
   const onDrawerItemClick = (text: DrawerSection_Type) => {
     setSectionSelected(text);
+
     if (text === "PRACTICES") {
       setDrawerOpen(false);
       setTimeout(() => router.push("/practices"), 200);
+    } else if (text === "LOG OUT") {
+      router.push("/logout");
     } else {
       setDrawerOpen(true);
       setTimeout(() => router.push("/"), 200);
@@ -94,7 +98,7 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   });
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen w-full">
       <CssBaseline />
       <Drawer variant="permanent" open={drawerOpen}>
         <div className="h-8" />
@@ -105,6 +109,10 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
       </Drawer>
       {children ? (
         <div className="flex flex-1">{children}</div>
+      ) : sectionSelected === "PRACTICES" ? (
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress sx={{ color: colors.main }} />
+        </div>
       ) : (
         <div
           className="flex flex-1 flex-col items-center justify-center p-3"

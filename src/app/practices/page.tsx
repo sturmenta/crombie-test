@@ -3,35 +3,42 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "@mui/material/styles";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { WithDrawer } from "@/components/forThisApp";
 import { SearchInput, SelectInput } from "@/components/generic";
-import { theme } from "@/config";
 import { useDrawerOpenStore } from "@/store";
 import { MOCKED_PRACTICES } from "@/mocked";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
+import { theme } from "@/config";
 
-import { AddNewModal, Header, ListOfItems } from "./_components";
+import { AddNewModal, Header, ListOfItems, SnackBar } from "./_components";
+
+const queryClient = new QueryClient();
 
 export default function Practices() {
   const router = useRouter();
   const { setDrawerOpen } = useDrawerOpenStore();
-  const { sectionSelected, setSectionSelected } = useSectionSelectedStore();
+  const { setSectionSelected } = useSectionSelectedStore();
 
   const [showAddNewModal, setShowAddNewModal] = useState(false);
   const [displayBy, setDisplayBy] = useState("practice");
   const [filterByText, setFilterByText] = useState("");
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [successToastMessage, setSuccessToastMessage] = useState("");
+  const [errorToastOpen, setErrorToastOpen] = useState(false);
+  const [errorToastMessage, setErrorToastMessage] = useState("");
 
   const onClose = () => {
     setDrawerOpen(true);
     setSectionSelected("DASHBOARD");
-    setTimeout(() => router.push("/"), 300);
+    setTimeout(() => router.replace("/"), 300);
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <WithDrawer>
-        {sectionSelected === "PRACTICES" && (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <WithDrawer>
           <div className="flex flex-1 flex-col">
             <Header
               onClose={onClose}
@@ -49,17 +56,38 @@ export default function Practices() {
                 <ListOfItems
                   items={MOCKED_PRACTICES}
                   filterByText={filterByText}
+                  showSuccessToast={() => setSuccessToastOpen(true)}
+                  setSuccessToastMessage={setSuccessToastMessage}
+                  showErrorToast={() => setErrorToastOpen(true)}
+                  setErrorToastMessage={setErrorToastMessage}
                 />
                 <div className="h-5" />
               </div>
             </div>
           </div>
-        )}
-        <AddNewModal
-          open={showAddNewModal}
-          handleClose={() => setShowAddNewModal(false)}
-        />
-      </WithDrawer>
-    </ThemeProvider>
+          <AddNewModal
+            open={showAddNewModal}
+            handleClose={() => setShowAddNewModal(false)}
+            showSuccessToast={() => setSuccessToastOpen(true)}
+            setSuccessToastMessage={setSuccessToastMessage}
+            showErrorToast={() => setErrorToastOpen(true)}
+            setErrorToastMessage={setErrorToastMessage}
+          />
+          {/* ───────────────────────────────────── */}
+          <SnackBar
+            open={successToastOpen}
+            handleClose={() => setSuccessToastOpen(false)}
+            text={successToastMessage}
+            type="success"
+          />
+          <SnackBar
+            open={errorToastOpen}
+            handleClose={() => setErrorToastOpen(false)}
+            type="error"
+            text={errorToastMessage}
+          />
+        </WithDrawer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
