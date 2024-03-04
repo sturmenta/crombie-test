@@ -17,7 +17,7 @@ import { useSupabase } from "@/components/generic/supabase";
 type Practice_Type = {
   name: string;
   type: string;
-  amount_of_jobs: number | undefined;
+  amount_of_jobs: number;
 };
 
 export const AddNewModal = ({
@@ -25,11 +25,13 @@ export const AddNewModal = ({
   handleClose,
   showSuccessToast,
   showErrorToast,
+  setErrorToastMessage,
 }: {
   open: boolean;
   handleClose: () => void;
   showSuccessToast: () => void;
   showErrorToast: () => void;
+  setErrorToastMessage: (message: string) => void;
 }) => {
   const { supabase } = useSupabase();
   const { isPending, mutate } = useMutation({
@@ -42,8 +44,9 @@ export const AddNewModal = ({
 
   const [name, setName] = useState("");
   const [type, setType] = useState("");
-  const [amount_of_jobs, setAmountOfJobs] =
-    useState<Practice_Type["amount_of_jobs"]>(0);
+  const [amount_of_jobs, setAmountOfJobs] = useState<
+    Practice_Type["amount_of_jobs"] | undefined
+  >(0);
 
   // ─────────────────────────────────────────────────────────────────────
 
@@ -54,7 +57,7 @@ export const AddNewModal = ({
   // ─────────────────────────────────────────────────────────────────────
 
   const onSubmit = useCallback(() => {
-    mutate({ amount_of_jobs, name, type });
+    mutate({ amount_of_jobs: amount_of_jobs || 0, name, type });
   }, [amount_of_jobs, name, type, mutate]);
 
   const onSuccess = (
@@ -65,7 +68,7 @@ export const AddNewModal = ({
     const _data = data as { error: any };
     if (_data?.error) {
       showErrorToast();
-      return console.log(`data.error`, _data?.error);
+      return console.error(`data.error`, _data?.error);
     }
 
     handleClose();
@@ -83,8 +86,9 @@ export const AddNewModal = ({
   ) => {
     if (!error) return;
 
+    setErrorToastMessage("There was an error adding the practice");
     showErrorToast();
-    console.log(`error`, error);
+    console.error(`error`, error);
   };
 
   // ─────────────────────────────────────────────────────────────────────

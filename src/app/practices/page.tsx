@@ -26,6 +26,7 @@ export default function Practices() {
   const [filterByText, setFilterByText] = useState("");
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [errorToastOpen, setErrorToastOpen] = useState(false);
+  const [errorToastMessage, setErrorToastMessage] = useState("");
 
   const onClose = () => {
     setDrawerOpen(true);
@@ -54,6 +55,8 @@ export default function Practices() {
                 <ListOfItems
                   items={MOCKED_PRACTICES}
                   filterByText={filterByText}
+                  showErrorToast={() => setErrorToastOpen(true)}
+                  setErrorToastMessage={setErrorToastMessage}
                 />
                 <div className="h-5" />
               </div>
@@ -64,6 +67,7 @@ export default function Practices() {
             handleClose={() => setShowAddNewModal(false)}
             showSuccessToast={() => setSuccessToastOpen(true)}
             showErrorToast={() => setErrorToastOpen(true)}
+            setErrorToastMessage={setErrorToastMessage}
           />
           {/* ───────────────────────────────────── */}
           <SnackBar
@@ -76,7 +80,7 @@ export default function Practices() {
             open={errorToastOpen}
             handleClose={() => setErrorToastOpen(false)}
             type="error"
-            text="There was an error adding the practice"
+            text={errorToastMessage}
           />
         </WithDrawer>
       </ThemeProvider>

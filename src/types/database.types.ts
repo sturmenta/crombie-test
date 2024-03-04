@@ -11,25 +11,25 @@ export type Database = {
     Tables: {
       practice: {
         Row: {
-          amount_of_jobs: number | null
+          amount_of_jobs: number
           created_at: string
           id: number
-          name: string | null
-          type: string | null
+          name: string
+          type: string
         }
         Insert: {
-          amount_of_jobs?: number | null
+          amount_of_jobs: number
           created_at?: string
           id?: number
-          name?: string | null
-          type?: string | null
+          name: string
+          type: string
         }
         Update: {
-          amount_of_jobs?: number | null
+          amount_of_jobs?: number
           created_at?: string
           id?: number
-          name?: string | null
-          type?: string | null
+          name?: string
+          type?: string
         }
         Relationships: []
       }
