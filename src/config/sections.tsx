@@ -8,6 +8,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import QuestionMarkOutlinedIcon from "@mui/icons-material/QuestionMarkOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export type DrawerSection_Type =
   | "DASHBOARD"
@@ -19,7 +20,8 @@ export type DrawerSection_Type =
   | "TIME & PAY"
   | "MESSAGES"
   | "HELP"
-  | "SETTINGS";
+  | "SETTINGS"
+  | "LOG OUT";
 
 export const drawerItems: {
   text: DrawerSection_Type;
@@ -82,5 +84,9 @@ export const drawerLastItems: {
   {
     text: "SETTINGS",
     icon: (size: number) => <SettingsOutlinedIcon sx={{ fontSize: size }} />,
+  },
+  {
+    text: "LOG OUT",
+    icon: (size: number) => <LogoutIcon sx={{ fontSize: size }} />,
   },
 ];

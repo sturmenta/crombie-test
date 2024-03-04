@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { WithDrawer } from "@/components/forThisApp";
-import { SearchInput, SelectInput } from "@/components/generic";
+import {
+  SearchInput,
+  SelectInput,
+  SupabaseAuthRedirect,
+} from "@/components/generic";
 import { useDrawerOpenStore } from "@/store";
 import { MOCKED_PRACTICES } from "@/mocked";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
@@ -14,7 +18,7 @@ import { AddNewModal, Header, ListOfItems } from "./_components";
 export default function Practices() {
   const router = useRouter();
   const { setDrawerOpen } = useDrawerOpenStore();
-  const { sectionSelected, setSectionSelected } = useSectionSelectedStore();
+  const { setSectionSelected } = useSectionSelectedStore();
 
   const [showAddNewModal, setShowAddNewModal] = useState(false);
   const [displayBy, setDisplayBy] = useState("practice");
@@ -23,12 +27,12 @@ export default function Practices() {
   const onClose = () => {
     setDrawerOpen(true);
     setSectionSelected("DASHBOARD");
-    setTimeout(() => router.push("/"), 300);
+    setTimeout(() => router.replace("/"), 300);
   };
 
   return (
-    <WithDrawer>
-      {sectionSelected === "PRACTICES" && (
+    <SupabaseAuthRedirect>
+      <WithDrawer>
         <div className="flex flex-1 flex-col">
           <Header onClose={onClose} onAddNew={() => setShowAddNewModal(true)} />
           <div className="flex flex-1 justify-center overflow-y-scroll">
@@ -45,11 +49,11 @@ export default function Practices() {
             </div>
           </div>
         </div>
-      )}
-      <AddNewModal
-        open={showAddNewModal}
-        handleClose={() => setShowAddNewModal(false)}
-      />
-    </WithDrawer>
+        <AddNewModal
+          open={showAddNewModal}
+          handleClose={() => setShowAddNewModal(false)}
+        />
+      </WithDrawer>
+    </SupabaseAuthRedirect>
   );
 }

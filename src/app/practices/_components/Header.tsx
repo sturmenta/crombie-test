@@ -16,7 +16,12 @@ export const Header = ({
       className="ml-6 rounded-sm"
       style={{ backgroundColor: colors.secondary }}
     >
-      <Button onClick={onAddNew} variant="contained" startIcon={<AddIcon />}>
+      <Button
+        onClick={onAddNew}
+        sx={{ backgroundColor: colors.secondary }}
+        variant="contained"
+        startIcon={<AddIcon />}
+      >
         Add new
       </Button>
     </div>

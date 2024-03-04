@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -22,11 +22,13 @@ import {
 } from "@/assets/animations";
 import { useGetDivDimensions } from "@/hooks";
 import { calculateSizeForAsset } from "@/utils";
+import { createClient } from "@/utils/supabase/client";
 
 const drawerWidth = 240;
 
 export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();
+  const supabase = createClient();
   const {
     dimensions: animationContainerDimensions,
     div_ref: animationContainer_ref,
@@ -36,9 +38,16 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
 
   const onDrawerItemClick = (text: DrawerSection_Type) => {
     setSectionSelected(text);
+
+    console.log(`text`, text);
+
     if (text === "PRACTICES") {
       setDrawerOpen(false);
       setTimeout(() => router.push("/practices"), 200);
+    }
+    if (text === "LOG OUT") {
+      supabase.auth.signOut();
+      router.replace("/login");
     } else {
       setDrawerOpen(true);
       setTimeout(() => router.push("/"), 200);
@@ -96,7 +105,7 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex h-screen">
+      <div className="flex h-screen w-full">
         <CssBaseline />
         <Drawer variant="permanent" open={drawerOpen}>
           <div className="h-8" />

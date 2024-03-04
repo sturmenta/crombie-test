@@ -1,17 +1,12 @@
+"use client";
+
 import { WithDrawer } from "@/components/forThisApp";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { SupabaseAuthRedirect } from "@/components/generic";
 
-export default async function Home() {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/login");
-  }
-
-  return <WithDrawer />;
+export default function Home() {
+  return (
+    <SupabaseAuthRedirect>
+      <WithDrawer />
+    </SupabaseAuthRedirect>
+  );
 }
