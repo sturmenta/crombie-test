@@ -24,12 +24,14 @@ export const AddNewModal = ({
   open,
   handleClose,
   showSuccessToast,
+  setSuccessToastMessage,
   showErrorToast,
   setErrorToastMessage,
 }: {
   open: boolean;
   handleClose: () => void;
   showSuccessToast: () => void;
+  setSuccessToastMessage: (message: string) => void;
   showErrorToast: () => void;
   setErrorToastMessage: (message: string) => void;
 }) => {
@@ -72,6 +74,7 @@ export const AddNewModal = ({
     }
 
     handleClose();
+    setSuccessToastMessage("The practice was added successfully!");
     showSuccessToast();
 
     setName("");

@@ -25,6 +25,7 @@ export default function Practices() {
   const [displayBy, setDisplayBy] = useState("practice");
   const [filterByText, setFilterByText] = useState("");
   const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [successToastMessage, setSuccessToastMessage] = useState("");
   const [errorToastOpen, setErrorToastOpen] = useState(false);
   const [errorToastMessage, setErrorToastMessage] = useState("");
 
@@ -55,6 +56,8 @@ export default function Practices() {
                 <ListOfItems
                   items={MOCKED_PRACTICES}
                   filterByText={filterByText}
+                  showSuccessToast={() => setSuccessToastOpen(true)}
+                  setSuccessToastMessage={setSuccessToastMessage}
                   showErrorToast={() => setErrorToastOpen(true)}
                   setErrorToastMessage={setErrorToastMessage}
                 />
@@ -66,6 +69,7 @@ export default function Practices() {
             open={showAddNewModal}
             handleClose={() => setShowAddNewModal(false)}
             showSuccessToast={() => setSuccessToastOpen(true)}
+            setSuccessToastMessage={setSuccessToastMessage}
             showErrorToast={() => setErrorToastOpen(true)}
             setErrorToastMessage={setErrorToastMessage}
           />
@@ -73,7 +77,7 @@ export default function Practices() {
           <SnackBar
             open={successToastOpen}
             handleClose={() => setSuccessToastOpen(false)}
-            text="The practice was added successfully!"
+            text={successToastMessage}
             type="success"
           />
           <SnackBar

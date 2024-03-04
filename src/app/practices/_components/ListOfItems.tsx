@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button, CircularProgress } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { colors } from "@/config";
 import { CheckboxItem } from "@/components/generic";
@@ -20,23 +20,43 @@ export const ListOfItems = ({
   filterByText,
   showErrorToast,
   setErrorToastMessage,
+  showSuccessToast,
+  setSuccessToastMessage,
 }: {
   items: PracticeItem_Type[];
   filterByText: string;
   showErrorToast: () => void;
   setErrorToastMessage: (message: string) => void;
+  showSuccessToast: () => void;
+  setSuccessToastMessage: (message: string) => void;
 }) => {
   // ─────────────────────────────────────────────────────────────────────
   const { supabase } = useSupabase();
 
   const {
-    isPending,
+    isPending: isFetchingOnlineItems,
     isError,
     data: onlineItems,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["getCurrencies"],
     queryFn: async () => await supabase.from("practice").select("*"),
+  });
+
+  const { isPending: isDeleting, mutate } = useMutation({
+    mutationFn: async (id: number) =>
+      await supabase.from("practice").delete().eq("id", id),
+    onSuccess: (data, variables, context) => {
+      setSuccessToastMessage("Item deleted");
+      showSuccessToast();
+      refetch();
+    },
+    onError: (error, variables, context) => {
+      setErrorToastMessage("Error deleting item");
+      showErrorToast();
+      console.error("error", error);
+    },
   });
 
   // ─────────────────────────────────────────────────────────────────────
@@ -99,17 +119,11 @@ export const ListOfItems = ({
     [items]
   );
 
-  const onDeleteItems = () => {
-    console.log(`itemsCheckedFromBackend`, itemsCheckedFromBackend);
-  };
-
   // ─────────────────────────────────────────────────────────────────────
-
-  const showDeleteButton = atLeastOneChecked; // check all the items checked are from backend
 
   return (
     <div className="flex flex-1 flex-col overflow-y-scroll">
-      {isPending ? (
+      {isFetchingOnlineItems ? (
         <div className="flex flex-1 items-center justify-center">
           <CircularProgress sx={{ color: colors.main }} />
         </div>
@@ -135,9 +149,9 @@ export const ListOfItems = ({
                   color="error"
                   size="small"
                   startIcon={<DeleteIcon />}
-                  onClick={onDeleteItems}
+                  onClick={() => mutate(itemsCheckedFromBackend[0].id)}
                 >
-                  Delete
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </Button>
               </div>
             )}
