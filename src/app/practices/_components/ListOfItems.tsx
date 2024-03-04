@@ -84,8 +84,8 @@ export const ListOfItems = ({
   const itemsCheckedFromBackend = items.filter(
     (item) => item.is_from_backend && itemsChecked[item.id]
   );
-  const itemsCheckedFromBackendAreJustOne =
-    itemsCheckedFromBackend.length === 1;
+  const onlyOneItemChecked =
+    items.filter((item) => itemsChecked[item.id]).length === 1;
 
   // ─────────────────────────────────────────────────────────────────────
 
@@ -144,7 +144,7 @@ export const ListOfItems = ({
                 }}
               />
             </div>
-            {itemsCheckedFromBackendAreJustOne && (
+            {onlyOneItemChecked && itemsCheckedFromBackend.length === 1 && (
               <div className="ml-3">
                 <Button
                   variant="outlined"
