@@ -61,15 +61,8 @@ export const AddNewModal = ({
 
   const [name, setName] = useState("");
   const [type, setType] = useState("");
-  const [amount_of_jobs, setAmountOfJobs] = useState<
-    Practice_Type["amount_of_jobs"] | undefined
-  >(0);
-
-  // ─────────────────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    setAmountOfJobs(undefined);
-  }, []);
+  const [amount_of_jobs, setAmountOfJobs] =
+    useState<Practice_Type["amount_of_jobs"]>(0);
 
   // ─────────────────────────────────────────────────────────────────────
 
@@ -95,7 +88,7 @@ export const AddNewModal = ({
 
     setName("");
     setType("");
-    setAmountOfJobs(undefined);
+    setAmountOfJobs(0);
   };
 
   const onError = (
