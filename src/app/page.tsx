@@ -1,14 +1,17 @@
-"use client";
-
-import { ThemeProvider } from "@mui/material/styles";
-
 import { WithDrawer } from "@/components/forThisApp";
-import { theme } from "@/config";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <ThemeProvider theme={theme}>
-      <WithDrawer />
-    </ThemeProvider>
-  );
+export default async function Home() {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return redirect("/login");
+  }
+
+  return <WithDrawer />;
 }

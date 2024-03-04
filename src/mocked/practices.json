@@ -2,181 +2,175 @@
   {
     "id": 1,
     "name": "ALTRU HEALTH SYSTEM",
-    "practice": "Behavioral Neurology & Neuropsychiatry",
+    "type": "Behavioral Neurology & Neuropsychiatry",
     "amount_of_jobs": 5
   },
   {
     "id": 2,
     "name": "Northside Hospital Cherokee",
-    "practice": "Radiology",
+    "type": "Radiology",
     "amount_of_jobs": 1
   },
   {
     "id": 3,
     "name": "Novant Health Brunswick Medical Centers",
-    "practice": "Hospitalist",
+    "type": "Hospitalist",
     "amount_of_jobs": 1
   },
   {
     "id": 4,
     "name": "Better Medicine Testing Company of Georgia",
-    "practice": "Psychiatry",
+    "type": "Psychiatry",
     "amount_of_jobs": 1
   },
   {
     "id": 5,
     "name": "Anna Jaques Hospital",
-    "practice": "Behavioral Neurology & Neuropsyciatry",
+    "type": "Behavioral Neurology & Neuropsyciatry",
     "amount_of_jobs": 1
   },
   {
     "id": 6,
     "name": "Mountain View Hospital",
-    "practice": "Orthopedic Surgery",
+    "type": "Orthopedic Surgery",
     "amount_of_jobs": 7
   },
   {
     "id": 7,
     "name": "Sunset Healthcare Center",
-    "practice": "Family Medicine",
+    "type": "Family Medicine",
     "amount_of_jobs": 2
   },
   {
     "id": 8,
     "name": "Lakefront Medical Associates",
-    "practice": "Internal Medicine",
+    "type": "Internal Medicine",
     "amount_of_jobs": 4
   },
   {
     "id": 9,
     "name": "Pine Grove Behavioral Health & Addiction Services",
-    "practice": "Psychiatry",
+    "type": "Psychiatry",
     "amount_of_jobs": 3
   },
   {
     "id": 10,
     "name": "Golden Valley Medical Clinic",
-    "practice": "Pediatrics",
+    "type": "Pediatrics",
     "amount_of_jobs": 1
   },
   {
     "id": 11,
     "name": "Cedar Grove General Hospital",
-    "practice": "Emergency Medicine",
+    "type": "Emergency Medicine",
     "amount_of_jobs": 10
   },
   {
     "id": 12,
     "name": "Maplewood Cardiology Associates",
-    "practice": "Cardiology",
+    "type": "Cardiology",
     "amount_of_jobs": 3
   },
   {
     "id": 13,
     "name": "Sunrise Nursing and Rehabilitation Center",
-    "practice": "Geriatrics",
+    "type": "Geriatrics",
     "amount_of_jobs": 5
   },
   {
     "id": 14,
     "name": "Bayview Surgical Center",
-    "practice": "General Surgery",
+    "type": "General Surgery",
     "amount_of_jobs": 2
   },
   {
     "id": 15,
     "name": "Riverside Behavioral Health Clinic",
-    "practice": "Psychiatry",
+    "type": "Psychiatry",
     "amount_of_jobs": 4
   },
   {
     "id": 16,
     "name": "Palm Grove Pediatrics",
-    "practice": "Pediatrics",
+    "type": "Pediatrics",
     "amount_of_jobs": 1
   },
   {
     "id": 17,
     "name": "Oakwood Women's Health Center",
-    "practice": "Obstetrics & Gynecology",
+    "type": "Obstetrics & Gynecology",
     "amount_of_jobs": 3
   },
   {
     "id": 18,
     "name": "Valley View Dermatology Group",
-    "practice": "Dermatology",
+    "type": "Dermatology",
     "amount_of_jobs": 2
   },
   {
     "id": 19,
     "name": "Harborview Family Medicine",
-    "practice": "Family Medicine",
+    "type": "Family Medicine",
     "amount_of_jobs": 6
   },
   {
     "id": 20,
     "name": "Greenwood Orthopedic Center",
-    "practice": "Orthopedic Surgery",
+    "type": "Orthopedic Surgery",
     "amount_of_jobs": 3
   },
   {
     "id": 21,
     "name": "Sunnyvale Mental Health Clinic",
-    "practice": "Psychiatry",
+    "type": "Psychiatry",
     "amount_of_jobs": 2
   },
   {
     "id": 22,
     "name": "Highland Dental Care",
-    "practice": "Dentistry",
+    "type": "Dentistry",
     "amount_of_jobs": 150
   },
   {
     "id": 23,
     "name": "Golden Gate Rehabilitation Center",
-    "practice": "Physical Therapy",
+    "type": "Physical Therapy",
     "amount_of_jobs": 3
   },
   {
     "id": 24,
     "name": "Evergreen Family Practice",
-    "practice": "Family Medicine",
+    "type": "Family Medicine",
     "amount_of_jobs": 5
   },
   {
     "id": 25,
     "name": "Redwood City Medical Imaging",
-    "practice": "Radiology",
+    "type": "Radiology",
     "amount_of_jobs": 1
   },
   {
     "id": 26,
     "name": "Mountain Crest Urgent Care",
-    "practice": "Urgent Care",
+    "type": "Urgent Care",
     "amount_of_jobs": 2
   },
   {
     "id": 27,
     "name": "Pacific Palms Neurology Associates",
-    "practice": "Neurology",
+    "type": "Neurology",
     "amount_of_jobs": 1
   },
   {
     "id": 28,
     "name": "Sunset Behavioral Health Center",
-    "practice": "Psychiatry",
+    "type": "Psychiatry",
     "amount_of_jobs": 3
   },
   {
     "id": 29,
     "name": "Ocean View Dental Clinic",
-    "practice": "Dentistry",
+    "type": "Dentistry",
     "amount_of_jobs": 2
-  },
-  {
-    "id": 30,
-    "name": "Pine Hill Pediatric Associates",
-    "practice": "Pediatrics",
-    "amount_of_jobs": 1
   }
 ]

@@ -11,7 +11,7 @@ export const ListOfItems = ({
 }: {
   items: {
     name: string;
-    practice: string;
+    type: string;
     amount_of_jobs: number;
     id: number;
   }[];
@@ -21,8 +21,8 @@ export const ListOfItems = ({
     items.reduce((acc, { id }) => ({ ...acc, [id]: false }), {})
   );
 
-  const filteredItemsByText = items.filter(({ name, practice }) =>
-    `${name} ${practice}`.toLowerCase().includes(filterByText.toLowerCase())
+  const filteredItemsByText = items.filter(({ name, type }) =>
+    `${name} ${type}`.toLowerCase().includes(filterByText.toLowerCase())
   );
 
   const atLeastOneChecked = Object.keys(itemsChecked).some(
@@ -82,11 +82,11 @@ export const ListOfItems = ({
       </div>
       <div className="flex flex-1 flex-col overflow-y-scroll">
         {filteredItemsByText.map(
-          ({ amount_of_jobs, name, practice, id }, index) => (
+          ({ amount_of_jobs, name, type, id }, index) => (
             <div key={index} className="flex mt-2">
               <div className="flex flex-1">
                 <CheckboxItem
-                  label={`${name} - ${practice}`}
+                  label={`${name} - ${type}`}
                   checkboxProps={{
                     checked: itemsChecked[id],
                     onCheckedChange: () =>

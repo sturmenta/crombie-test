@@ -10,9 +10,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Lottie from "react-lottie";
+import { ThemeProvider } from "@mui/material/styles";
 
 import { useDrawerOpenStore } from "@/store";
-import { colors } from "@/config";
+import { colors, theme } from "@/config";
 import { DrawerSection_Type, drawerItems, drawerLastItems } from "@/config";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
 import {
@@ -94,37 +95,39 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   });
 
   return (
-    <div className="flex h-screen">
-      <CssBaseline />
-      <Drawer variant="permanent" open={drawerOpen}>
-        <div className="h-8" />
-        {renderList(drawerItems)}
-        <div className="flex flex-1" />
-        {renderList(drawerLastItems)}
-        <div className="h-8" />
-      </Drawer>
-      {children ? (
-        <div className="flex flex-1">{children}</div>
-      ) : (
-        <div
-          className="flex flex-1 flex-col items-center justify-center p-3"
-          ref={animationContainer_ref}
-        >
-          <Lottie
-            options={{
-              loop: true,
-              autoplay: true,
-              animationData: Animation_Empty,
-            }}
-            width={animationDimensions.width}
-            height={animationDimensions.height}
-          />
-          <p className="text-xl mt-10 font-light text-center">
-            {sectionSelected}
-          </p>
-        </div>
-      )}
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="flex h-screen">
+        <CssBaseline />
+        <Drawer variant="permanent" open={drawerOpen}>
+          <div className="h-8" />
+          {renderList(drawerItems)}
+          <div className="flex flex-1" />
+          {renderList(drawerLastItems)}
+          <div className="h-8" />
+        </Drawer>
+        {children ? (
+          <div className="flex flex-1">{children}</div>
+        ) : (
+          <div
+            className="flex flex-1 flex-col items-center justify-center p-3"
+            ref={animationContainer_ref}
+          >
+            <Lottie
+              options={{
+                loop: true,
+                autoplay: true,
+                animationData: Animation_Empty,
+              }}
+              width={animationDimensions.width}
+              height={animationDimensions.height}
+            />
+            <p className="text-xl mt-10 font-light text-center">
+              {sectionSelected}
+            </p>
+          </div>
+        )}
+      </div>
+    </ThemeProvider>
   );
 };
 
