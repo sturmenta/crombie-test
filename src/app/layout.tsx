@@ -10,7 +10,7 @@ import {
   SupabaseListener,
   SupabaseProvider,
 } from "@/components/generic/supabase";
-import { createClient } from "@/utils/supabase/server";
+import { createServerClient } from "@/utils/supabase/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +24,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = createClient();
+  const supabase = createServerClient();
 
   const {
     data: { session },

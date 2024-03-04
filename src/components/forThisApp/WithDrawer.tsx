@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -10,10 +10,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Lottie from "react-lottie";
-import { ThemeProvider } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useDrawerOpenStore } from "@/store";
-import { colors, theme } from "@/config";
+import { colors } from "@/config";
 import { DrawerSection_Type, drawerItems, drawerLastItems } from "@/config";
 import { useSectionSelectedStore } from "@/store/sectionSelected_store";
 import {
@@ -22,13 +22,11 @@ import {
 } from "@/assets/animations";
 import { useGetDivDimensions } from "@/hooks";
 import { calculateSizeForAsset } from "@/utils";
-import { createClient } from "@/utils/supabase/client";
 
 const drawerWidth = 240;
 
 export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();
-  const supabase = createClient();
   const {
     dimensions: animationContainerDimensions,
     div_ref: animationContainer_ref,
@@ -39,17 +37,11 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   const onDrawerItemClick = (text: DrawerSection_Type) => {
     setSectionSelected(text);
 
-    console.log(`text`, text);
-
     if (text === "PRACTICES") {
       setDrawerOpen(false);
-      console.log("1");
       setTimeout(() => router.push("/practices"), 200);
-      console.log("2");
-    }
-    if (text === "LOG OUT") {
-      supabase.auth.signOut();
-      router.replace("/login");
+    } else if (text === "LOG OUT") {
+      router.push("/logout");
     } else {
       setDrawerOpen(true);
       setTimeout(() => router.push("/"), 200);
@@ -106,39 +98,41 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="flex h-screen w-full">
-        <CssBaseline />
-        <Drawer variant="permanent" open={drawerOpen}>
-          <div className="h-8" />
-          {renderList(drawerItems)}
-          <div className="flex flex-1" />
-          {renderList(drawerLastItems)}
-          <div className="h-8" />
-        </Drawer>
-        {children ? (
-          <div className="flex flex-1">{children}</div>
-        ) : (
-          <div
-            className="flex flex-1 flex-col items-center justify-center p-3"
-            ref={animationContainer_ref}
-          >
-            <Lottie
-              options={{
-                loop: true,
-                autoplay: true,
-                animationData: Animation_Empty,
-              }}
-              width={animationDimensions.width}
-              height={animationDimensions.height}
-            />
-            <p className="text-xl mt-10 font-light text-center">
-              {sectionSelected}
-            </p>
-          </div>
-        )}
-      </div>
-    </ThemeProvider>
+    <div className="flex h-screen w-full">
+      <CssBaseline />
+      <Drawer variant="permanent" open={drawerOpen}>
+        <div className="h-8" />
+        {renderList(drawerItems)}
+        <div className="flex flex-1" />
+        {renderList(drawerLastItems)}
+        <div className="h-8" />
+      </Drawer>
+      {children ? (
+        <div className="flex flex-1">{children}</div>
+      ) : sectionSelected === "PRACTICES" ? (
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress sx={{ color: colors.main }} />
+        </div>
+      ) : (
+        <div
+          className="flex flex-1 flex-col items-center justify-center p-3"
+          ref={animationContainer_ref}
+        >
+          <Lottie
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: Animation_Empty,
+            }}
+            width={animationDimensions.width}
+            height={animationDimensions.height}
+          />
+          <p className="text-xl mt-10 font-light text-center">
+            {sectionSelected}
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
 
