@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,26 +8,86 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
 
 import { InputNumber } from "@/components/generic";
 import { colors } from "@/config";
+import { useSupabase } from "@/components/generic/supabase";
+
+type Practice_Type = {
+  name: string;
+  type: string;
+  amount_of_jobs: number | undefined;
+};
 
 export const AddNewModal = ({
   open,
   handleClose,
+  showSuccessToast,
+  showErrorToast,
 }: {
   open: boolean;
   handleClose: () => void;
+  showSuccessToast: () => void;
+  showErrorToast: () => void;
 }) => {
+  const { supabase } = useSupabase();
+  const { isPending, mutate } = useMutation({
+    mutationFn: async ({ name, type, amount_of_jobs }: Practice_Type) =>
+      await supabase.from("practice").insert({ name, type, amount_of_jobs }),
+    onSuccess: (data, variables, context) =>
+      onSuccess(data, variables, context),
+    onError: (error, variables, context) => onError(error, variables, context),
+  });
+
   const [name, setName] = useState("");
   const [type, setType] = useState("");
-  const [amountOfJobs, setAmountOfJobs] = useState(0);
+  const [amount_of_jobs, setAmountOfJobs] =
+    useState<Practice_Type["amount_of_jobs"]>(0);
 
-  const onSubmit = () => {
-    console.log(`name`, name);
-    console.log(`type`, type);
-    console.log(`amountOfJobs`, amountOfJobs);
+  // ─────────────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    setAmountOfJobs(undefined);
+  }, []);
+
+  // ─────────────────────────────────────────────────────────────────────
+
+  const onSubmit = useCallback(() => {
+    mutate({ amount_of_jobs, name, type });
+  }, [amount_of_jobs, name, type, mutate]);
+
+  const onSuccess = (
+    data: UseMutationResult["data"],
+    variables: Practice_Type,
+    context: UseMutationResult["context"]
+  ) => {
+    const _data = data as { error: any };
+    if (_data?.error) {
+      showErrorToast();
+      return console.log(`data.error`, _data?.error);
+    }
+
+    handleClose();
+    showSuccessToast();
+
+    setName("");
+    setType("");
+    setAmountOfJobs(undefined);
   };
+
+  const onError = (
+    error: UseMutationResult["error"],
+    variables: Practice_Type,
+    context: UseMutationResult["context"]
+  ) => {
+    if (!error) return;
+
+    showErrorToast();
+    console.log(`error`, error);
+  };
+
+  // ─────────────────────────────────────────────────────────────────────
 
   return (
     <Modal
@@ -64,7 +124,7 @@ export const AddNewModal = ({
         <InputNumber
           aria-label="Amount of jobs for this practice"
           placeholder="Amount of jobs"
-          value={amountOfJobs}
+          value={amount_of_jobs}
           onChange={(event, val) => val && setAmountOfJobs(val)}
         />
         <div className="h-5" />
@@ -78,7 +138,7 @@ export const AddNewModal = ({
             startIcon={<AddIcon />}
             sx={{ width: "100%" }}
           >
-            Add new
+            {isPending ? "Adding new..." : "Add new"}
           </Button>
         </div>
       </Box>

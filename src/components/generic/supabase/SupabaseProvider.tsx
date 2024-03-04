@@ -3,17 +3,21 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
+import { Session, SupabaseClient } from "@supabase/supabase-js";
 
 import { createBrowserClient } from "@/utils/supabase/client";
 import { colors } from "@/config";
+import { Database } from "@/types/database.types";
 
 type SupabaseContext = {
-  supabase: any;
-  session: any;
+  supabase: SupabaseClient<Database>;
+  session: Session | null;
 };
 
-// @ts-ignore
-const Context = createContext<SupabaseContext>();
+const Context = createContext<SupabaseContext>({
+  supabase: {} as SupabaseClient<Database>,
+  session: null,
+});
 
 export const SupabaseProvider = ({
   children,
