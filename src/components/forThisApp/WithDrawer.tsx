@@ -43,7 +43,9 @@ export const WithDrawer = ({ children }: { children?: React.ReactNode }) => {
 
     if (text === "PRACTICES") {
       setDrawerOpen(false);
+      console.log("1");
       setTimeout(() => router.push("/practices"), 200);
+      console.log("2");
     }
     if (text === "LOG OUT") {
       supabase.auth.signOut();
