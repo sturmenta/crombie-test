@@ -8,7 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+} from "@tanstack/react-query";
 
 import { InputNumber } from "@/components/generic";
 import { colors } from "@/config";
@@ -36,6 +40,8 @@ export const AddNewModal = ({
   setErrorToastMessage: (message: string) => void;
 }) => {
   const { supabase } = useSupabase();
+  // ─────────────────────────────────────────────────────────────────────
+
   const { isPending, mutate } = useMutation({
     mutationFn: async ({ name, type, amount_of_jobs }: Practice_Type) =>
       await supabase.from("practice").insert({ name, type, amount_of_jobs }),
@@ -43,6 +49,15 @@ export const AddNewModal = ({
       onSuccess(data, variables, context),
     onError: (error, variables, context) => onError(error, variables, context),
   });
+
+  // ─────────────────────────────────────────────────────────────────────
+
+  const { refetch } = useQuery({
+    queryKey: ["getItems"],
+    queryFn: async () => await supabase.from("practice").select("*"),
+  });
+
+  // ─────────────────────────────────────────────────────────────────────
 
   const [name, setName] = useState("");
   const [type, setType] = useState("");
@@ -76,6 +91,7 @@ export const AddNewModal = ({
     handleClose();
     setSuccessToastMessage("The practice was added successfully!");
     showSuccessToast();
+    refetch();
 
     setName("");
     setType("");

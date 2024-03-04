@@ -40,9 +40,11 @@ export const ListOfItems = ({
     error,
     refetch,
   } = useQuery({
-    queryKey: ["getCurrencies"],
+    queryKey: ["getItems"],
     queryFn: async () => await supabase.from("practice").select("*"),
   });
+
+  // ─────────────────────────────────────────────────────────────────────
 
   const { isPending: isDeleting, mutate } = useMutation({
     mutationFn: async (id: number) =>
